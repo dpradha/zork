@@ -1,11 +1,16 @@
 #include "Container.h"
 
-Container::Container()
+Container::Container(xml_node<>* node)
 {
+	initContainer(node);
 }
 
 Container::~Container()
 {
+}
+
+void Container::initContainer(xml_node<>* node) {
+
 }
 
 // Getter functions
@@ -19,17 +24,17 @@ char* Container::getStatus()
 	return this->status;
 }
 
-ItemList Container::getAccept()
+vector <string> Container::getAccept()
 {
 	return this->accept;
 }
 
-ItemList Container::getItems()
+vector <string> Container::getItems()
 {
 	return this->items;
 }
 
-TriggerList Container::getTriggers()
+vector <Trigger*> Container::getTriggers()
 {
 	return this->triggers;
 }

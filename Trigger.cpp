@@ -1,11 +1,16 @@
 #include "Trigger.h"
 
-Trigger::Trigger()
+Trigger::Trigger(xml_node<>* node)
 {
+	initTrigger(node);
 }
 
 Trigger::~Trigger()
 {
+}
+
+void Trigger::initTrigger(xml_node<>* node) {
+
 }
 
 // Getter Functions

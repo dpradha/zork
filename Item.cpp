@@ -1,11 +1,16 @@
 #include "Item.h"
 
-Item::Item()
+Item::Item(xml_node<>* node)
 {
+	initItem(node);
 }
 
 Item::~Item()
 {
+}
+
+void Item::initItem(xml_node<>* node) {
+
 }
 
 // Getter functions
@@ -34,7 +39,7 @@ TurnOn* Item::getTurnOn()
 	return this->turnOn;
 }
 
-TriggerList Item::getTriggers()
+vector <Trigger*> Item::getTriggers()
 {
 	return this->triggers;
 }

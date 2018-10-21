@@ -1,11 +1,16 @@
 #include "Room.h"
 
-Room::Room()
+Room::Room(xml_node<>* node)
 {
+	initRoom(node);
 }
 
 Room::~Room()
 {
+}
+
+void Room::initRoom(xml_node<>* node) {
+
 }
 
 // Getter functions
@@ -30,27 +35,27 @@ char* Room::getType()
 	return this->type;
 }
 
-BorderList Room::getBorders()
+vector <Border*> Room::getBorders()
 {
 	return this->borders;
 }
 
-ContainerList Room::getContainers()
+vector <Container*> Room::getContainers()
 {
 	return this->containers;
 }
 
-ItemList Room::getItems()
+vector <Item*> Room::getItems()
 {
 	return this->items;
 }
 
-CreatureList Room::getCreatures()
+vector <Creature*> Room::getCreatures()
 {
 	return this->creatures;
 }
 
-TriggerList Room::getTriggers()
+vector <Trigger*> Room::getTriggers()
 {
 	return this->triggers;
 }

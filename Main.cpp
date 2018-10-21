@@ -1,4 +1,3 @@
-#include "XMLParser.h"
 #include "Room.h"
 
 int main(char* argv[], int argc) {

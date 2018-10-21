@@ -2,8 +2,12 @@
 #define _ITEM_H
 #include <stdlib.h>
 #include <vector>
-#include "ClassList.h"
+#include "Trigger.h"
+#include "rapidxml-1.13/rapidxml.hpp"
+#include "rapidxml-1.13/rapidxml_utils.hpp"
+#include "rapidxml-1.13/rapidxml_print.hpp"
 
+using namespace rapidxml;
 using namespace std;
 
 typedef struct {
@@ -14,7 +18,7 @@ typedef struct {
 class Item
 {
 public:
-	Item();
+	Item(xml_node<>* node);
 	~Item();
 
 	// Getter functions
@@ -23,7 +27,7 @@ public:
 	char* getDescription();
 	char* getWriting();
 	TurnOn* getTurnOn();
-	TriggerList getTriggers();
+	vector <Trigger*> getTriggers();
 
 private:
 	// Member variables
@@ -32,7 +36,10 @@ private:
 	char* description;
 	char* writing;
 	TurnOn* turnOn;
-	TriggerList triggers;
+	vector <Trigger*> triggers;
+
+	// Functions
+	void initItem(xml_node<>* node);
 };
 #endif
 
