@@ -4,6 +4,7 @@
 #include "Container.h"
 #include "Item.h"
 #include "Creature.h"
+#include <map>
 #include <iostream>
 #include <fstream>
 
@@ -11,10 +12,10 @@ class Parse
 {
 public:
 	// Member Variables
-	vector <Room*> rooms;
-	vector <Container*> containers;
-	vector <Item*> items;
-	vector <Creature*> creatures;
+	map <string, Room*> rooms;
+	map <string, Container*> containers;
+	map <string, Item*> items;
+	map <string, Creature*> creatures;
 
 	// Member functions
 	Parse();
@@ -22,14 +23,6 @@ public:
 	void initializeMap(char* fileName);
 	
 private:	
-	
-	
-
-	// Member functions
-	void setupRoom(vector<xml_node<>*> roomNodes);
-	void setupContainer(vector<xml_node<>*> containerNodes);
-	void setupItem(vector<xml_node<>*> itemNodes);
-	void setupCreature(vector<xml_node<>*> creatureNodes);
 };
 
 
