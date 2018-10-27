@@ -10,36 +10,25 @@
 using namespace rapidxml;
 using namespace std;
 
-typedef struct {
-	char* print;
-	char* action;
-}TurnOn;
-
-class Item
-{
+class Item {
 public:
-	Item(xml_node<>* node);
-	~Item();
+	string name;
+	string description;
+	vector<string> turnOnAction;
+	string status;
+	vector<string> turnOnPrint;
+	vector<Trigger*> triggers;
+	string writing;
 
-	// Getter functions
-	char* getName();
-	char* getStatus();
-	char* getDescription();
-	char* getWriting();
-	TurnOn* getTurnOn();
-	vector <Trigger*> getTriggers();
+	// Member functions
+	Item(xml_node<> *);
+	virtual ~Item();
+	void initializeItem (xml_node<> *);
 
 private:
-	// Member variables
-	char* name;
-	char* status;
-	char* description;
-	char* writing;
-	TurnOn* turnOn;
-	vector <Trigger*> triggers;
-
-	// Functions
-	void initItem(xml_node<>* node);
+	void AddTurnOn(xml_node<> *);
 };
-#endif
+
+#endif /* ITEM_H_ */
+
 

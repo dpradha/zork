@@ -1,45 +1,48 @@
 #include "Item.h"
 
-Item::Item(xml_node<>* node)
+Item::Item(xml_node<>* newNode)
 {
-	initItem(node);
+	initializeItem(newNode);
 }
 
 Item::~Item()
 {
 }
 
-void Item::initItem(xml_node<>* node) {
-
+void Item::initializeItem(xml_node<>* node) {
+	xml_node<>* item = node->first_node();
+	while(item != NULL) {
+				if(strcmp(item->name(),"name") == 0) {
+					this->name = item->value();
+				}
+				else if (strcmp(item->name(),"trigger")==0) {
+					this->triggers.push_back(new Trigger(item));
+				}
+				else if(strcmp(item->name(),"status") == 0) {
+					this->status = item->value();
+				}
+				else if (strcmp(item->name(),"writing") == 0) {
+					this->writing = item->value();
+				}
+				else if (strcmp(item->name(),"description") == 0) {
+					this->description = item->value();
+				}
+				else if (strcmp(item->name(),"turnon") == 0) {  
+					AddTurnOn(item->first_node());
+				}
+				item = item->next_sibling();
+			}
 }
 
-// Getter functions
-char* Item::getName()
-{
-	return this->name;
+void Item::AddTurnOn(xml_node<>* node) {
+	while(node != NULL) {
+		if(strcmp(node->name(),"action") == 0) {
+			this->turnOnAction.push_back(node->value());
+		}
+		else if(strcmp(node->name(),"print") == 0) {
+			this->turnOnPrint.push_back(node->value());
+		}
+		node = node->next_sibling();
+	}
 }
 
-char* Item::getStatus()
-{
-	return this->status;
-}
-
-char* Item::getDescription()
-{
-	return this->description;
-}
-
-char* Item::getWriting()
-{
-	return this->writing;
-}
-
-TurnOn* Item::getTurnOn()
-{
-	return this->turnOn;
-}
-
-vector <Trigger*> Item::getTriggers()
-{
-	return this->triggers;
-}
