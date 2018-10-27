@@ -4,6 +4,7 @@
 #include "Container.h"
 #include "Item.h"
 #include "Creature.h"
+#include "Trigger.h"
 #include <map>
 #include <iostream>
 #include <fstream>
@@ -18,7 +19,7 @@ public:
 	map <string, Creature*> creatures;
 
 	// Member functions
-	Parse();
+	Parse(char* fileName);
 	~Parse();
 	void initializeMap(char* fileName);
 	

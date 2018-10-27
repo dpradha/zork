@@ -26,20 +26,6 @@ class Room
 public:
 	Room(xml_node<>* node);
 	~Room();
-	
-	// Getter functions
-	char* getDescription();
-	char* getName();
-	char* getStatus();
-	char* getType();
-	vector <Border*> getBorders();
-	vector <Container*> getContainers();
-	vector <Item*> getItems();
-	vector <Creature*> getCreatures();
-	vector <Trigger*> getTriggers();
-
-
-private:
 	// Member Variables
 	char* description;
 	char* name;
@@ -53,6 +39,8 @@ private:
 
 	// Functions
 	void initRoom(xml_node<>* node);
+
+private:
 };
 
 #endif

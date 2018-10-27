@@ -21,15 +21,6 @@ public:
 	Item(xml_node<>* node);
 	~Item();
 
-	// Getter functions
-	char* getName();
-	char* getStatus();
-	char* getDescription();
-	char* getWriting();
-	TurnOn* getTurnOn();
-	vector <Trigger*> getTriggers();
-
-private:
 	// Member variables
 	char* name;
 	char* status;
@@ -40,6 +31,9 @@ private:
 
 	// Functions
 	void initItem(xml_node<>* node);
+
+private:
+	
 };
 #endif
 

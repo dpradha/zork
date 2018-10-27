@@ -1,8 +1,7 @@
 #include "Parse.h"
 
-Parse::Parse()
-{
-	
+Parse::Parse(char* fileName) {
+	this->initializeMap(fileName);
 }
 
 Parse::~Parse()
@@ -27,20 +26,21 @@ void Parse::initializeMap(char* fileName) {
 	{
 		if (string(topNode->name()) == string("room")) {
 			room = new Room(topNode);
-			rooms[room->getName()] = room;
+			rooms[room->name] = room;
 		}
 		else if (string(topNode->name()) == string("container")) {
 			container = new Container(topNode);
-			containers[container->getName] = container;
+			containers[container->name] = container;
 		}
 		else if (string(topNode->name()) == string("item")) {
 			item = new Item(topNode);
-			items[item->getName] = item;
+			items[item->name] = item;
 		}
 		else if (string(topNode->name()) == string("creature")) {
 			creature = new Creature(topNode);
-			creatures[creature->getName] = creature;
+			creatures[creature->name] = creature;
 		}
+
 		topNode = topNode->next_sibling();
 	}
 }

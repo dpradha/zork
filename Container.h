@@ -19,23 +19,18 @@ public:
 	Container(xml_node<>* node);
 	~Container();
 
-	// Getter functions
-	char* getName();
-	char* getStatus();
-	vector <string> getAccept();
-	vector <string> getItems();
-	vector <Trigger*> getTriggers();
-
-private:
 	// Member Variables
 	char* name;
 	char* status;
 	vector <string> accept;
 	vector <string> items;
 	vector <Trigger*> triggers;
-	
+
 	// Functions
 	void initContainer(xml_node<>* node);
+	
+private:
+	
 };
 
 #endif
