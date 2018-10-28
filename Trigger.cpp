@@ -7,17 +7,17 @@ Trigger::Trigger(xml_node<>* trigger) {
 Trigger::~Trigger() {}
 
 void Trigger::initTrigger(xml_node<>* trigger) {
-	xml_node<>* topNode = trigger->first_node()->next_sibling();
+	xml_node<>* topNode = trigger->first_node();
 	
 	while (topNode != NULL)
 	{
 		if (string(topNode->name()) == string("type")) {
 			this->type = string(topNode->value());
 		}
-		if (string(topNode->name()) == string("command")) {
+		else if (string(topNode->name()) == string("command")) {
 			this->commands.push_back(string(topNode->value()));
 		}
-		if (string(topNode->name()) == string("condition")) {
+		else if (string(topNode->name()) == string("condition")) {
 			if (this->hasOwner(topNode)) {
 				this->conditions.push_back(this->initCondition(topNode, true));
 			}
@@ -47,11 +47,12 @@ bool Trigger::hasOwner(xml_node<>* condition) {
 }
 
 TriggerCondition* Trigger::initCondition(xml_node<>* conditionNode, bool hasOwner) {
-	xml_node<>* topNode = conditionNode->first_node()->next_sibling();
-	TriggerCondition* condition = {};
+	xml_node<>* topNode = conditionNode->first_node();
+	TriggerCondition* condition = new TriggerCondition;
 	condition->isOwner = hasOwner;
 
 	if (hasOwner) {
+		condition->owner = new TriggerCondOwner;
 		while (topNode != NULL) {
 			if (string(topNode->name()) == string("has")) {
 				condition->owner->has = string(topNode->value());
@@ -67,11 +68,12 @@ TriggerCondition* Trigger::initCondition(xml_node<>* conditionNode, bool hasOwne
 	}
 
 	else {
+		condition->status = new TriggerCondStatus;
 		while (topNode != NULL) {
 			if (string(topNode->name()) == string("object")) {
 				condition->status->object = string(topNode->value());
 			}
-			if (string(topNode->name()) == string("owner")) {
+			if (string(topNode->name()) == string("status")) {
 				condition->status->status = string(topNode->value());
 			}
 			topNode = topNode->next_sibling();

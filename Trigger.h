@@ -11,14 +11,14 @@
 using namespace rapidxml;
 using namespace std;
 
-struct Owner
+struct TriggerCondOwner
 {
 	string has;
 	string object;
 	string owner;
 };
 
- struct Status
+ struct TriggerCondStatus
 {
 	string object;
 	string status;
@@ -27,8 +27,8 @@ struct Owner
 struct TriggerCondition
 {
 	bool isOwner;
-	Owner* owner;
-	Status* status;
+	TriggerCondOwner* owner;
+	TriggerCondStatus* status;
 };
 
 class Trigger
