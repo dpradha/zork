@@ -5,5 +5,6 @@
 
 #include "Parse.h"
 #include "PlayGame.h"
+#include "Room.h"
 
 #endif // !_HEADER_H
