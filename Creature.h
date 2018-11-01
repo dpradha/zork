@@ -12,16 +12,16 @@
 using namespace rapidxml;
 using namespace std;
 
-struct AttackCondition{
-	Item* object;
-	string status;
-};
+// struct AttackCondition{
+// 	Item* object;
+// 	string status;
+// };
 
-struct Attack{
-	AttackCondition* condition;
-	string print;
-	vector <string> actions;
-};
+// struct Attack{
+// 	AttackCondition* condition;
+// 	string print;
+// 	vector <string> actions;
+// };
 
 class Creature
 {
@@ -35,12 +35,19 @@ public:
 	vector <string> vulnerability;
 	Attack* attack;
 	vector <Trigger*> triggers;
+	string print;
+	map<string,string> conditions;
+	vector<string> action;
+	map<string,string> attack;
+	int count;
 
 	// Functions
 	void initCreature(xml_node<>* node);
 
 private:
-	
+	string intString(int,string);
+	void AttackSetUp(xml_node<>*);
+	void ConditionSetUp(xml_node<>*);
 };
 
 #endif // !_CREATURE_H
