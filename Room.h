@@ -31,10 +31,10 @@ public:
 	char* name;
 	char* status;
 	char* type;
-	vector <Border*> borders;
-	vector <Container*> containers;
-	vector <Item*> items;
-	vector <Creature*> creatures;
+	vector <string> borders;
+	vector <string> containers;
+	vector <string> items;
+	vector <string> creatures;
 	vector <Trigger*> triggers;
 
 	// Functions

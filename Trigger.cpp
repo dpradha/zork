@@ -18,17 +18,13 @@ void Trigger::initTrigger(xml_node<>* trigger) {
 			this->commands.push_back(string(topNode->value()));
 		}
 		else if (string(topNode->name()) == string("condition")) {
-			if (this->hasOwner(topNode)) {
-				this->conditions.push_back(this->initCondition(topNode, true));
-			}
-			else {
-				this->conditions.push_back(this->initCondition(topNode, false));
-			}
+			condition->isOwner = hasOwner(topNode);
+			this->condition = this->initCondition(topNode);			
 		}
-		if (string(topNode->name()) == string("action")) {
+		else if (string(topNode->name()) == string("action")) {
 			this->actions.push_back(string(topNode->value()));
 		}
-		if (string(topNode->name()) == string("print")) {
+		else if (string(topNode->name()) == string("print")) {
 			this->print = string(topNode->value());
 		}
 		topNode = topNode->next_sibling();
@@ -46,21 +42,21 @@ bool Trigger::hasOwner(xml_node<>* condition) {
 	return false;
 }
 
-TriggerCondition* Trigger::initCondition(xml_node<>* conditionNode, bool hasOwner) {
+TriggerCondition* Trigger::initCondition(xml_node<>* conditionNode) {
 	xml_node<>* topNode = conditionNode->first_node();
 	TriggerCondition* condition = new TriggerCondition;
-	condition->isOwner = hasOwner;
-
-	if (hasOwner) {
+	
+	if (condition->isOwner) {
 		condition->owner = new TriggerCondOwner;
+		condition->status = NULL;
 		while (topNode != NULL) {
 			if (string(topNode->name()) == string("has")) {
 				condition->owner->has = string(topNode->value());
 			}
-			if (string(topNode->name()) == string("object")) {
+			else if (string(topNode->name()) == string("object")) {
 				condition->owner->object = string(topNode->value());
 			}
-			if (string(topNode->name()) == string("owner")) {
+			else if (string(topNode->name()) == string("owner")) {
 				condition->owner->owner = string(topNode->value());
 			}
 			topNode = topNode->next_sibling();
@@ -69,11 +65,12 @@ TriggerCondition* Trigger::initCondition(xml_node<>* conditionNode, bool hasOwne
 
 	else {
 		condition->status = new TriggerCondStatus;
+		condition->owner = NULL;
 		while (topNode != NULL) {
 			if (string(topNode->name()) == string("object")) {
 				condition->status->object = string(topNode->value());
 			}
-			if (string(topNode->name()) == string("status")) {
+			else if (string(topNode->name()) == string("status")) {
 				condition->status->status = string(topNode->value());
 			}
 			topNode = topNode->next_sibling();
