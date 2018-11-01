@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <iostream>
+#include <map>
+#include<sstream>
 #include "Trigger.h"
 #include "Item.h"
 #include "rapidxml-1.13/rapidxml.hpp"
@@ -32,19 +35,19 @@ public:
 	// Member variables
 	string name;
 	string status;
-	vector <string> vulnerability;
-	vector <Trigger*> triggers;
+	vector<string>vulnerability;
+	vector<Trigger*>triggers;
 	string print;
-	map<string,string> conditions;
-	vector<string> action;
-	map<string,string> attack;
+	map<string,string>conditions;
+	vector<string>action;
+	map<string,string>attack;
 	int count;
 
 	// Functions
 	void initCreature(xml_node<>* node);
 
 private:
-	string intString(int,string);
+	string intString(int, string);
 	void AttackSetUp(xml_node<>*);
 	void ConditionSetUp(xml_node<>*);
 };
