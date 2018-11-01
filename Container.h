@@ -20,17 +20,17 @@ public:
 	~Container();
 
 	// Member Variables
-	char* name;
-	char* status;
+	string name;
+	string status;
 	vector <string> accept;
 	vector <string> items;
 	vector <Trigger*> triggers;
-
+	bool truthValue;
 	// Functions
-	void initContainer(xml_node<>* node);
+	
 	
 private:
-	
+	void initContainer(xml_node<>* node);
 };
 
 #endif
