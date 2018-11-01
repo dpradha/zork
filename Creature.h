@@ -33,7 +33,6 @@ public:
 	string name;
 	string status;
 	vector <string> vulnerability;
-	Attack* attack;
 	vector <Trigger*> triggers;
 	string print;
 	map<string,string> conditions;
