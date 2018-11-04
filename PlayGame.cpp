@@ -197,7 +197,7 @@ bool PlayGame::checkTriggerCondition(TriggerCondition* tc, Parse* parse) {
 
 /************************************* Game Command Functions *****************************************/
 void PlayGame::behindTheSceneCmds(string cmd, Parse* parse) {
-	istringstream iss(cmd);
+	stringstream iss(cmd);
 	vector <string> bts(istream_iterator<string>{iss}, istream_iterator<string>());
 
 	if (bts[0] == "Add") {
@@ -218,6 +218,7 @@ void PlayGame::behindTheSceneCmds(string cmd, Parse* parse) {
 		gameCommands(cmd, parse);
 	}
 }
+
 
 
 void PlayGame::gameCommands(string cmd, Parse* parse) {
@@ -258,4 +259,301 @@ void PlayGame::gameCommands(string cmd, Parse* parse) {
 	else {
 		cout << "Error! Wrong Command" << endl;
 	}
+}
+
+
+/////////////////////////////////////// 
+//////
+//////
+////// 13 sub-functions for the game commands function
+//////
+//////
+//////
+///////////////////////////////////////
+void Game::openContainer(string container,xmlpars* data){
+	Room * currentRoomPtr = data -> rooms.find(currentRoom)->second;
+	vector<string>::iterator temp;
+	int a =findInVector(container,currentRoomPtr->container);
+	if(a){
+	map<string,Container*>::iterator it = data -> containers.find(container);
+	Container* changer;
+	if(it != data->containers.end())
+	{
+	   changer = it->second;
+	   if(changer -> status == "locked"){
+		   cout << changer -> name << " is not open." << endl;
+	   }else{
+		   if(changer->item.size() == 0){
+			   cout << changer ->name << " is empty."<<endl;
+		   }
+		   else{
+			   cout<<changer->name<<" contains ";
+			   for(vector<string>::iterator counter_vec = changer->item.begin(); counter_vec!= changer->item.end(); counter_vec++){
+				   temp = counter_vec;
+				   temp++;
+				   cout << *counter_vec;
+				   if(temp != changer->item.end()) {
+					   cout << ", ";
+				   }
+				   else {
+					   cout << ".";
+				   }
+			   }
+			   cout<<endl;
+		   }
+		   changer -> status = "open";
+	   }
+
+	}
+	else{
+		cout <<"Error" << endl;
+	}
+	}else{
+		cout <<"Error" << endl;
+	}
+}
+
+void Game::putCon(string item,string container,xmlpars* data){
+	Room * currentRoomPtr = data -> rooms.find(currentRoom)->second;
+	int a = findInVector(container,currentRoomPtr->container);
+	if(a){
+		if(inventory.find(item) != inventory.end()){
+			map<string,Container*>::iterator compare = data -> containers.find(container);
+			Container* changer = compare -> second;
+			changer ->item.push_back(item);
+			cout <<"Item "<< item << " added to " << changer -> name<< endl;
+			inventory.erase(item);
+
+		}else{
+			cout << item <<"Error" << endl;
+		}
+	}else{
+		cout << "Error"<<endl;
+	}
+
+}
+void Game::turnOn(string item,xmlpars* data){
+	Item* itemP;
+	if(inventory.find(item) != inventory.end()){
+		cout<<"You activate the "<<item <<endl;
+		map<string,Item*>::iterator compare = data -> items.find(item);
+		itemP = compare -> second;
+		for(int i = 0; i < itemP->turnOnPrint.size();i++){
+		cout<<itemP->turnOnPrint[i]<<endl;
+		}
+		if(itemP->turnOnAction.size() != 0){
+			for(int i = 0; i < itemP->turnOnAction.size(); i++){
+				bTS(itemP->turnOnAction[i],data);
+			}
+		}
+	}
+	else{
+				cout << item <<" is not in inventory" << endl;
+	}
+}
+
+
+
+void Game::readItem(string item,xmlpars* data){
+	Item* ItemP;
+	if(inventory.find(item) != inventory.end()){
+		map<string,Item*>::iterator compare = data -> items.find(item);
+		ItemP = compare -> second;
+		if(ItemP->writing == ""){
+			cout << "Nothing written." << endl;
+		}else{
+			cout << ItemP->writing <<endl ;
+		}
+	}else{
+		cout << "Error" << endl;
+	}
+
+}
+
+
+void Game::attack(string creature, string item, xmlpars* data) {
+	bool inventor = checkInventory(item, data);
+	bool found = false;
+	Room * currRoom = data->rooms.find(currentRoom)->second;
+	vector<string>::iterator i;
+	int count_creatures= 0;
+	if(inventor) {
+		count_creatures = findInVector(creature,currRoom->creature);
+		if(count_creatures) {
+			if(!data->creatures[creature]->vulnerabilities.empty()) {
+				i = data->creatures[creature]->vulnerabilities.begin();
+				while(i != data->creatures[creature]->vulnerabilities.end()) {
+					if((*i) == item) {
+						cout<<"You assault the "<<creature<<" with "<<item<<endl;
+						if(data->creatures[creature]->conditions.empty()) {
+							found = creaturesWithoutConditions(creature, data);
+						}
+						else {
+							found = creaturesWithConditions(creature, data);
+						}
+					}
+					i++;
+				}
+			}
+			else {
+				cout << "Error" <<endl;
+			}
+		}
+		else {
+			cout <<"Error"<<endl;
+		}
+	}
+	else {
+		cout <<"Error"<< endl;
+	}
+}
+
+
+void Game::takeItem(string item, xmlpars* data){
+	Room * currentRoomPtr = data -> rooms.find(currentRoom)->second;
+	bool flagR = false; // remove item from room after item taken
+	bool flagC = false;
+	int count = 0;
+	int offset = 0;
+	for(vector<string>::iterator counter_vec = currentRoomPtr->item.begin(); counter_vec!= currentRoomPtr->item.end(); counter_vec++) {
+		if(*counter_vec == item){
+			cout << "Item "<< item <<" added to the inventory." << endl;
+			flagR = true ;
+			offset = count;
+		}
+		count = count + 1;
+	}
+	if(flagR){// need to remove item from item
+		inventory[item] = item;
+		currentRoomPtr->item.erase(currentRoomPtr->item.begin()+offset);
+		return;
+	}
+	count = 0;
+	int a = 0;
+	for(vector<string>::iterator counter_vec = currentRoomPtr->container.begin(); counter_vec!= currentRoomPtr->container.end(); counter_vec++) {
+			a = findInVector(item,data->containers[*counter_vec]->item);
+				if(a){
+					if(data->containers[*counter_vec]->status == "open"){
+						for(vector<string>::iterator vec = data->containers[*counter_vec]->item.begin(); vec!= data->containers[*counter_vec]->item.end(); vec++) {
+								if(*vec == item){
+									cout << "Item "<< item <<" added to the inventory." << endl;
+									inventory[item] = item;
+									flagC = true ;
+									offset = count;
+								}
+								count = count + 1;
+							}
+						data->containers[*counter_vec]->item.erase(data->containers[*counter_vec]->item.begin()+offset);
+						return;
+					}
+					else{
+						cout <<"Error"<< endl;
+						return;
+					}
+					count = count + 1 ;
+				}
+	}
+	cout <<"Error"<<endl;
+}
+void Game::printInventory(){
+	if(inventory.empty()){
+		cout <<  "Inventory: empty" << endl;
+		return;
+	}
+	typedef map<string, string>::const_iterator MapIterator;
+	MapIterator temp;
+	cout <<  "Inventory : ";
+	for(MapIterator it= inventory.begin(); it != inventory.end(); ++it)
+	{
+	    std::cout<< it->second;
+	    temp = it;
+	    temp++;
+	    if(temp != inventory.end())
+	    cout<<", ";
+	}
+	cout<<"\n";
+}
+
+void Game::dropItem(string item,xmlpars* data){
+	Room * currentRoomPtr = data -> rooms.find(currentRoom)->second;
+	if(inventory.find(item) == inventory.end()){
+		cout << "Item is not in the inventory" << endl;
+	}
+	else {
+		currentRoomPtr->item.push_back(item);
+		inventory.erase(item);
+		cout<< item << " dropped." << endl;
+	}
+}
+
+void Game::moveRoom(string command, xmlpars* data){
+	Room * currentRoomPtr = data -> rooms.find(currentRoom)->second;
+	string direction;
+	string brName;
+	if ( command == "n") {
+		direction = "north";
+	}
+	else if( command == "s") {
+		direction = "south";
+	}
+	else if( command == "w") {
+		direction = "west";
+	}
+	else if( command == "e") {
+	    direction = "east";
+	}
+	if( currentRoomPtr->border.count(direction) != 0){
+		currentRoom = currentRoomPtr->border.find(direction)->second;
+		cout << data -> rooms.find(currentRoom)->second->description <<endl;
+	}
+	else{
+		cout << "Can't go that way" << endl;
+	}
+}
+
+bool Game::creaturesWithoutConditions(string creature, xmlpars* data) {
+	bool found = false;
+	string temp;
+	if(data->creatures[creature]->attack["print"] != "") {
+		cout << data->creatures[creature]->attack["print"] << endl;
+	}
+	for(int j = 0; j < data->creatures[creature]->count; j++) {
+		found = true;
+		temp = int_To_String(j,data,creature);
+		bTS(temp,data);
+	}
+	return found;
+}
+
+bool Game::creaturesWithConditions(string creature, xmlpars* data) {
+	bool condition_found = false;
+	bool found = false;
+	string temp;
+	condition_found = conditions("permanent",data->creatures[creature]->conditions,data);
+	if(condition_found == true) {
+		cout << data->creatures[creature]->attack["print"] << endl;
+		for(int j = 0; j < data->creatures[creature]->count; j++) {
+			found = true;
+			temp = int_To_String(j,data,creature);
+			bTS(temp,data);
+		}
+	}
+	return found;
+}
+
+string Game::int_To_String(int i,xmlpars* data, string name) {
+	string s;
+	stringstream out;
+	out << i;
+	s=out.str();
+	string k = data->creatures[name]->attack["action"+s];
+	return k;
+}
+
+bool Game::checkInventory(string item, xmlpars* data) {
+	bool init = false;
+	if(inventory.count(item) > 0) {
+		init = true;
+	}
+	return init;
 }
