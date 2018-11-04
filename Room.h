@@ -1,8 +1,8 @@
 #ifndef _ROOM_H
 #define _ROOM_H
-#include <stdlib.h>
 #include <vector>
 #include <string>
+#include <map>
 #include "Container.h"
 #include "Item.h"
 #include "Creature.h"
@@ -24,23 +24,27 @@ typedef struct {
 class Room
 {
 public:
-	Room(xml_node<>* node);
-	~Room();
+
 	// Member Variables
-	char* description;
-	char* name;
-	char* status;
-	char* type;
-	vector <Border*> borders;
-	vector <Container*> containers;
-	vector <Item*> items;
-	vector <Creature*> creatures;
+	string description;
+	string name;
+	string status;
+	string type;
+	
+	map<string,string> borders;
+	vector <string> creatures;
 	vector <Trigger*> triggers;
+	vector <string> containers;
+	vector <string> items;
 
-	// Functions
-	void initRoom(xml_node<>* node);
-
+	//Member functions
+	Room(xml_node<>*);
+	~Room();
+	
 private:
+	// Member functions
+	void initializeRoom(xml_node<>*);
+	void borderSetup(rapidxml::xml_node<> *roomNodeChild);
 };
 
 #endif

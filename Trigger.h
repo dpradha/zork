@@ -40,14 +40,14 @@ public:
 	// Member variables
 	string type;
 	vector <string> commands;
-	vector <TriggerCondition*> conditions;
+	TriggerCondition* condition;
 	string print;
 	vector <string> actions;
 
 	// Functions
 	void initTrigger(xml_node<>* trigger);
 	bool hasOwner(xml_node<>* condition);
-	TriggerCondition* initCondition(xml_node<>* condition, bool hasOwner);
+	TriggerCondition* initCondition(xml_node<>* condition);
 
 private:
 	
